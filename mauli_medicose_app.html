@@ -1,0 +1,2418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#02261a">
+  <title>MAULI MEDICOSE - Chemist &amp; Druggist</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Merriweather:wght@700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+              950: '#022c22'
+            },
+            amberBrand: '#fbbf24',
+            goldText: '#f59e0b',
+            accentBlue: '#0284c7'
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            serif: ['Merriweather', 'Georgia', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bot: env(safe-area-inset-bottom, 0px);
+    }
+    body {
+      padding-top: var(--safe-top);
+      padding-bottom: calc(72px + var(--safe-bot));
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      background-color: #ffffff;
+      color: #0f172a;
+    }
+    input, textarea, select {
+      user-select: text;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.16s ease-out forwards;
+    }
+    .nav-active {
+      color: #ffffff !important;
+      font-weight: 800;
+    }
+    .nav-active .nav-icon-bg {
+      background: rgba(255, 255, 255, 0.22);
+    }
+    .fab-btn {
+      transform: translateY(-12px);
+      box-shadow: 0 4px 14px rgba(6, 78, 59, 0.5);
+    }
+    .header-gradient {
+      background: linear-gradient(180deg, #02261a 0%, #06452e 100%);
+    }
+  </style>
+</head>
+<body class="bg-white text-slate-900 min-h-screen">
+
+  <!-- Top Pharmacy Header -->
+  <header id="app-header" class="header-gradient text-white shadow-md border-b-2 border-[#c9a227] sticky top-0 z-30 transition-all duration-200">
+    <!-- Rendered dynamically -->
+  </header>
+
+  <!-- Main Dynamic View Container -->
+  <main id="app-view" class="max-w-4xl mx-auto px-3.5 py-3 transition-opacity duration-150 bg-white min-h-[calc(100vh-140px)]">
+    <div class="p-8 text-center text-slate-400 text-sm">
+      Loading MAULI MEDICOSE...
+    </div>
+  </main>
+
+  <!-- Bottom Navigation Bar -->
+  <nav id="app-nav" class="fixed bottom-0 left-0 right-0 bg-[#064e3b] border-t border-[#09604a] z-40 flex items-center justify-around px-2 shadow-2xl" style="padding-bottom: var(--safe-bot)">
+    <!-- Bottom tabs injected via JS -->
+  </nav>
+
+  <!-- Photo Preview Lightbox Overlay -->
+  <div id="image-overlay" class="fixed inset-0 bg-black/90 backdrop-blur-sm z-50 hidden flex flex-col items-center justify-center p-4" onclick="closeImageOverlay()">
+    <button class="absolute top-5 right-5 text-white bg-white/20 hover:bg-white/30 rounded-full w-10 h-10 flex items-center justify-center font-bold text-lg" onclick="closeImageOverlay()">✕</button>
+    <img id="overlay-img" class="max-h-[85vh] max-w-[95vw] rounded-xl object-contain shadow-2xl" src="" alt="Medicine Photo">
+    <span class="text-white/80 text-xs mt-3">Tap anywhere to close</span>
+  </div>
+
+  <!-- Unified Dialog/Modal -->
+  <div id="modal-container" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div id="modal-card" class="bg-white rounded-2xl p-5 w-full max-w-sm shadow-2xl border border-slate-100 animate-fade-in text-center">
+      <div id="modal-icon" class="w-12 h-12 mx-auto rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl mb-3">💬</div>
+      <h3 id="modal-title" class="text-base font-bold text-slate-800">Notification</h3>
+      <div id="modal-body" class="text-xs text-slate-600 mt-1 mb-5 whitespace-pre-wrap"></div>
+      <div id="modal-actions" class="flex gap-2 justify-center">
+        <!-- Buttons injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Bar -->
+  <div id="toast-box" class="fixed bottom-20 left-1/2 -translate-x-1/2 bg-slate-900/95 text-white px-4 py-2 rounded-full text-xs font-semibold shadow-xl z-50 pointer-events-none transition-all duration-300 opacity-0 translate-y-3">
+    Notification
+  </div>
+
+  <script>
+    const DEFAULT_CLASSIFICATIONS = [
+      "Analgesics & Antipyretics", "Antacids & Antiulcer", "Anthelmintics", "Antibacterials",
+      "Anticoagulants & Antiplatelets", "Antidepressants & Anxiolytics", "Antidiabetics",
+      "Antidiarrhoeals & ORS", "Antiemetics", "Antiepileptics", "Antifungals",
+      "Antihistamines & Antiallergics", "Antihypertensives", "Antiprotozoals / Antimalarials",
+      "Antiseptics", "Antispasmodics", "Antivirals", "Cardiovascular", "CNS", "Corticosteroids",
+      "Cough & Cold", "Dermatological", "Diuretics", "ENT", "Gastrointestinal", "Haematinics",
+      "Hormonal", "Laxatives", "Muscle Relaxants", "NSAIDs", "Ophthalmic", "Respiratory",
+      "Statins & Lipid Lowering", "Thyroid", "Urological", "Vitamins & Minerals"
+    ];
+
+    const DEFAULT_DOSAGES = [
+      "Sunscreen", "Capsule", "Chewable Tablet", "Cream", "Dispersible Tablet", "Drops", "Dry Syrup",
+      "Dusting Powder", "Ear Drops", "Effervescent Tablet", "Eye Drops", "Eye Ointment",
+      "Gargle", "Gel", "Granules", "Infusion", "Inhaler", "Injection", "Kit", "Liquid Soap",
+      "Lotion", "Lozenge", "Mouthwash", "Nasal Drops", "Nasal Spray", "Ointment", "Oral Drops",
+      "Pessary", "Powder", "Respules", "Sachet", "Serum", "Shampoo", "Soap", "Solution", "Spray",
+      "Suppository", "Suspension", "Sustained Release Tablet", "Syrup", "Tablet", "Transdermal Patch", "Vaginal Cream"
+    ];
+
+    // Catalog clean seeded only with Sunshade Sunscreen as requested
+    const DEFAULT_MEDICINES = [
+      {
+        id: "m_sunshade",
+        brand: "Sunshade Sunscreen",
+        name: "Sunshade Sunscreen Lotion SPF 50+",
+        composition: "Octinoxate + Avobenzone + Oxybenzone + Zinc Oxide",
+        company: "Curatio Healthcare",
+        dosage: "Sunscreen",
+        cls: "Dermatological",
+        inStore: true
+      }
+    ];
+
+    const DEFAULT_DOCS = [
+      { id: "d1", name: "Dr. Rajesh Sharma", qual: "MBBS, MD (Medicine)", spec: "Consultant Physician", clinic: "City Life Hospital", extra: "Reg. 49204" }
+    ];
+
+    const DEFAULT_DM = [];
+    const DEFAULT_EXP = [];
+
+    const DEFAULT_CFG = {
+      name: "MAULI MEDICOSE",
+      type: "CHEMIST & DRUGGIST",
+      prop: "Anurag Pradip Chavhan",
+      pharm: "Registered Pharmacist",
+      dl: "MH-NG120-592435, 21-592436",
+      phone: "8149524882",
+      wa: "8149524882",
+      email: "maulimedicos@gmail.com",
+      address: "New Subhedar Layout, Subhedar Layout Road, Nagpur",
+      pin: "1234"
+    };
+
+    let S = {
+      cls: [],
+      dos: [],
+      meds: [],
+      docs: [],
+      dm: [],
+      exp: [],
+      cfg: { ...DEFAULT_CFG }
+    };
+
+    let route = ['home'];
+    let searchQuery = '';
+    let selectedLetter = '';
+    let selectedDosageFilter = '';
+    let selectedExpiryFilter = '';
+    let medListTab = 'store';
+    let isAdmin = false;
+
+    const $ = id => document.getElementById(id);
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+    function compressImageFile(file, maxWidth = 800, quality = 0.78) {
+      return new Promise((resolve, reject) => {
+        if (!file) return resolve('');
+        const reader = new FileReader();
+        reader.onload = ev => {
+          const img = new Image();
+          img.onload = () => {
+            let w = img.width;
+            let h = img.height;
+            if (w > maxWidth || h > maxWidth) {
+              if (w > h) {
+                h = Math.round((h * maxWidth) / w);
+                w = maxWidth;
+              } else {
+                w = Math.round((w * maxWidth) / h);
+                h = maxWidth;
+              }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.onerror = () => resolve(ev.target.result);
+          img.src = ev.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem('mauli_medicos_state_v5');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          S = { ...S, ...parsed };
+          if (!S.cfg) S.cfg = { ...DEFAULT_CFG };
+          if (!S.cls || !S.cls.length) S.cls = DEFAULT_CLASSIFICATIONS.map(n => ({ id: uid(), name: n }));
+          if (!S.dos || !S.dos.length) S.dos = DEFAULT_DOSAGES.map(n => ({ id: uid(), name: n }));
+          if (!S.meds || !S.meds.length) S.meds = [...DEFAULT_MEDICINES];
+        } else {
+          S.cls = DEFAULT_CLASSIFICATIONS.map(n => ({ id: uid(), name: n }));
+          S.dos = DEFAULT_DOSAGES.map(n => ({ id: uid(), name: n }));
+          S.meds = [...DEFAULT_MEDICINES];
+          S.docs = [...DEFAULT_DOCS];
+          S.dm = [...DEFAULT_DM];
+          S.exp = [...DEFAULT_EXP];
+          S.cfg = { ...DEFAULT_CFG };
+          saveState();
+        }
+      } catch (e) {
+        console.error('State load fallback', e);
+        S.cls = DEFAULT_CLASSIFICATIONS.map(n => ({ id: uid(), name: n }));
+        S.dos = DEFAULT_DOSAGES.map(n => ({ id: uid(), name: n }));
+        S.meds = [...DEFAULT_MEDICINES];
+        S.docs = [...DEFAULT_DOCS];
+        S.dm = [...DEFAULT_DM];
+        S.exp = [...DEFAULT_EXP];
+        S.cfg = { ...DEFAULT_CFG };
+      }
+      
+      try {
+        isAdmin = sessionStorage.getItem('mm_isAdmin') === 'true';
+      } catch (e) {
+        isAdmin = false;
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem('mauli_medicos_state_v5', JSON.stringify(S));
+      } catch (e) {
+        showToast('Storage limit reached');
+      }
+    }
+
+    function showToast(msg) {
+      const tb = $('toast-box');
+      if (!tb) return;
+      tb.textContent = msg;
+      tb.classList.remove('opacity-0', 'translate-y-3');
+      tb.classList.add('opacity-100', 'translate-y-0');
+      setTimeout(() => {
+        tb.classList.remove('opacity-100', 'translate-y-0');
+        tb.classList.add('opacity-0', 'translate-y-3');
+      }, 2300);
+    }
+
+    function showDialog({ title, message, icon = 'ℹ', confirmText = 'OK', cancelText = null, onConfirm = null }) {
+      $('modal-icon').textContent = icon;
+      $('modal-title').textContent = title;
+      $('modal-body').textContent = message;
+
+      const actions = $('modal-actions');
+      actions.innerHTML = '';
+
+      if (cancelText) {
+        const cancelBtn = document.createElement('button');
+        cancelBtn.className = 'px-4 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition';
+        cancelBtn.textContent = cancelText;
+        cancelBtn.onclick = () => {
+          $('modal-container').classList.add('hidden');
+        };
+        actions.appendChild(cancelBtn);
+      }
+
+      const confirmBtn = document.createElement('button');
+      confirmBtn.className = 'px-5 py-2 rounded-xl text-xs font-bold bg-emerald-700 text-white hover:bg-emerald-800 shadow transition';
+      confirmBtn.textContent = confirmText;
+      confirmBtn.onclick = () => {
+        $('modal-container').classList.add('hidden');
+        if (onConfirm) onConfirm();
+      };
+      actions.appendChild(confirmBtn);
+
+      $('modal-container').classList.remove('hidden');
+    }
+
+    function openImageOverlay(src) {
+      if (!src) return;
+      $('overlay-img').src = src;
+      $('image-overlay').classList.remove('hidden');
+    }
+
+    function closeImageOverlay() {
+      $('image-overlay').classList.add('hidden');
+      $('overlay-img').src = '';
+    }
+
+    function getDosageIcon(formName) {
+      const fn = (formName || '').toLowerCase();
+      if (/tablet|tab\b/.test(fn)) return `<svg class="w-3.5 h-3.5 inline mr-1 stroke-current" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M7 17L17 7"/></svg>`;
+      if (/capsule|cap\b/.test(fn)) return `<svg class="w-3.5 h-3.5 inline mr-1 stroke-current" viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="4" y="9" width="16" height="6" rx="3" transform="rotate(-30 12 12)"/><line x1="12" y1="6" x2="12" y2="18"/></svg>`;
+      if (/syrup|susp|liquid|solution/.test(fn)) return `<svg class="w-3.5 h-3.5 inline mr-1 stroke-current" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M10 3h4v3l2 2v12H8V8l2-2z"/><path d="M8 13h8"/></svg>`;
+      if (/inject|infus/.test(fn)) return `<svg class="w-3.5 h-3.5 inline mr-1 stroke-current" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M15 4l5 5M13 6l5 5-8 8-5-5zM8 16l-4 4M12 10l2 2"/></svg>`;
+      if (/cream|oint|gel|lotion|sunscreen/.test(fn)) return `<svg class="w-3.5 h-3.5 inline mr-1 stroke-current" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M8 3h8l-1 5H9zM9 8l-1 13h8l-1-13"/></svg>`;
+      if (/drop/.test(fn)) return `<svg class="w-3.5 h-3.5 inline mr-1 stroke-current" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 3s6 7 6 11a6 6 0 0 1-12 0c0-4 6-11 6-11z"/></svg>`;
+      if (/inhal|respule|spray/.test(fn)) return `<svg class="w-3.5 h-3.5 inline mr-1 stroke-current" viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="8" y="4" width="8" height="11" rx="2"/><path d="M12 15v5h4"/></svg>`;
+      return `<svg class="w-3.5 h-3.5 inline mr-1 stroke-current" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9v6"/></svg>`;
+    }
+
+    function navigate(...newRoute) {
+      route = newRoute;
+      searchQuery = '';
+      render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goBack() {
+      if (route.length > 1) {
+        route.pop();
+      } else {
+        route = ['home'];
+      }
+      searchQuery = '';
+      render();
+    }
+
+    const brandDisplay = m => m.brand ? m.brand : (m.name || 'Brand not specified');
+
+    function matchesSearch(text, m) {
+      if (!text) return true;
+      const q = text.toLowerCase().trim();
+      return [
+        m.name,
+        m.brand,
+        m.composition,
+        m.company,
+        m.cls,
+        m.dosage,
+        m.batch
+      ].some(val => (val || '').toLowerCase().includes(q));
+    }
+
+    function calculateDaysLeft(dateStr) {
+      if (!dateStr) return null;
+      const target = new Date(dateStr);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+    }
+
+    function getCategoryEmoji(name) {
+      const n = (name || '').toLowerCase();
+      if (/analges|pyret|paracetamol/.test(n)) return '🌡️';
+      if (/acid|ulcer|gastro/.test(n)) return '🫃';
+      if (/bacter|biotic/.test(n)) return '🦠';
+      if (/coagul|platelet|blood/.test(n)) return '❤️';
+      if (/depress|anxiolyt|epilep|neuro|cns/.test(n)) return '🧠';
+      if (/diabet/.test(n)) return '🩸';
+      if (/fung/.test(n)) return '🍄';
+      if (/hypertens|cardio|statin|lipid/.test(n)) return '❤️';
+      if (/derma|skin|antisep|sunscreen/.test(n)) return '🧴';
+      if (/diuret|uro/.test(n)) return '💧';
+      if (/resp|cough|asthma/.test(n)) return '🫁';
+      if (/vitamin|haemat|thyroid/.test(n)) return '🍊';
+      if (/ophth|eye/.test(n)) return '👁️';
+      if (/ent|ear|nasal/.test(n)) return '👂';
+      if (/viral/.test(n)) return '🧬';
+      if (/hormon/.test(n)) return '🧪';
+      if (/muscle/.test(n)) return '💪';
+      if (/laxat|diarrh/.test(n)) return '🌿';
+      return '⚕️';
+    }
+
+    function getDosageCardTheme(name) {
+      const n = (name || '').toLowerCase();
+      let symbol = '💊';
+      if (/sunscreen|sunblock/.test(n)) symbol = '☀️';
+      else if (/serum/.test(n)) symbol = '✨';
+      else if (/capsule/.test(n)) symbol = '💊';
+      else if (/chewable|dispersible|effervescent|dusting|granule|tablet/.test(n)) symbol = '⊘';
+      else if (/cream|gel|eye oint|oint|tube|lotion/.test(n)) symbol = '🧴';
+      else if (/dry syrup|syrup|suspension/.test(n)) symbol = '🍼';
+      else if (/drops|eye drops|ear drops|nasal/.test(n)) symbol = '💧';
+      else if (/infusion/.test(n)) symbol = '🫙';
+      else if (/inhaler|respule|spray/.test(n)) symbol = '🫁';
+      else if (/gargle|mouthwash/.test(n)) symbol = '🫧';
+      else if (/inject/.test(n)) symbol = '💉';
+      else if (/soap|shampoo/.test(n)) symbol = '🧼';
+
+      return {
+        cardBg: 'bg-white hover:bg-emerald-50/40',
+        cardBorder: 'border-emerald-200/90 hover:border-emerald-500',
+        iconBg: 'bg-emerald-100/90 text-[#064e3b]',
+        symbol: symbol
+      };
+    }
+
+    function renderHeader() {
+      const c = S.cfg;
+      const rawPhone = (c.phone || '8149524882').replace(/\s+/g, '');
+      const digitsOnly = rawPhone.replace(/\D/g, '');
+      const displayPhone = digitsOnly.replace(/^91/, '') || '8149524882';
+      const isHome = route[0] === 'home';
+
+      if (!isHome) {
+        let title = 'MAULI MEDICOSE';
+        let icon = '';
+
+        if (route[0] === 'meds') {
+          title = medListTab === 'master' ? 'MASTER MEDICINE LIST' : 'MAULI MEDICINE LIST';
+        } else if (route[0] === 'cls') {
+          if (route[1]) {
+            title = S.cls.find(x => x.id === route[1])?.name || 'Class Details';
+          } else {
+            title = 'CLASSIFICATION';
+            icon = '🧬 ';
+          }
+        } else if (route[0] === 'dos') {
+          title = route[1] ? (S.dos.find(x => x.id === route[1])?.name || 'Dosage Details') : 'DOSAGE FORMS';
+        } else if (route[0] === 'docs') {
+          if (route[1]) {
+            title = S.docs.find(x => x.id === route[1])?.name || 'Doctor Medicines';
+          } else {
+            title = 'DOCTORS';
+          }
+        } else if (route[0] === 'exp') {
+          title = 'EXPIRY & NON-MOVING';
+        } else if (route[0] === 'settings') {
+          title = 'SETTINGS & ADMIN';
+        }
+
+        return `
+          <div class="px-3 py-2.5 flex items-center justify-between">
+            <button onclick="goBack()" class="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 active:scale-95 flex items-center justify-center text-white">
+              <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <h1 class="text-sm font-black tracking-wide uppercase text-center truncate px-2 text-[#fde047] drop-shadow-sm">
+              ${icon}${esc(title)}
+            </h1>
+            <div class="w-8"></div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="px-4 pt-4 pb-3.5">
+          <!-- Line 1: Title + Gold Chemist & Druggist Badge -->
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <h1 class="font-serif font-black text-xl sm:text-2xl tracking-wide text-white uppercase leading-tight">${esc(c.name || 'MAULI MEDICOSE')}</h1>
+            <span class="border border-[#eab308] text-[#fde047] font-bold text-[10px] px-2 py-0.5 rounded tracking-wide uppercase">${esc(c.type || 'CHEMIST & DRUGGIST')}</span>
+          </div>
+
+          <!-- Line 2: Proprietor -->
+          <p class="text-[12.5px] text-[#a7f3d0] mt-1.5 leading-snug">
+            Proprietor: <b class="text-white font-semibold">${esc(c.prop || 'Anurag Pradip Chavhan')}</b>
+          </p>
+
+          <!-- Line 3: D.L. No. -->
+          <p class="text-[12.5px] text-[#34d399] mt-0.5 leading-snug">
+            D.L. No.: <b class="text-[#34d399] font-mono font-bold">${esc(c.dl || 'MH-NG120-592435, 21-592436')}</b>
+          </p>
+
+          <!-- Line 4: Address -->
+          <p class="text-[12px] text-[#a7f3d0] mt-0.5 flex items-center gap-1.5 leading-snug">
+            <span class="text-xs">📍</span> <span>${esc(c.address || 'New Subhedar Layout, Subhedar Layout Road, Nagpur')}</span>
+          </p>
+
+          <!-- Line 5: Ph No with pure white call icon (Left) & Email (Right) -->
+          <div class="mt-2.5 pt-2 border-t border-emerald-800/80 flex items-center justify-between text-[11.5px] gap-2">
+            <a href="tel:${displayPhone}" class="inline-flex items-center gap-1.5 text-[#fde047] hover:text-yellow-100 font-bold transition tracking-tight">
+              <span class="text-[#a7f3d0] font-semibold text-[11px]">Ph No:</span>
+              <svg class="w-3.5 h-3.5 text-white fill-current inline-block flex-shrink-0" viewBox="0 0 24 24"><path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+              <span>${esc(displayPhone)}</span>
+            </a>
+            <a href="mailto:${esc(c.email || 'maulimedicos@gmail.com')}" class="inline-flex items-center gap-1.5 text-[#fde047] hover:text-yellow-100 font-bold transition tracking-tight truncate max-w-[55%]">
+              <span class="text-[#a7f3d0] font-semibold text-[11px]">Email:</span>
+              <span class="text-xs text-white">✉</span>
+              <span class="truncate">${esc(c.email || 'maulimedicos@gmail.com')}</span>
+            </a>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderNav() {
+      const items = [
+        { key: 'home', icon: '🏠', label: 'Home' },
+        { key: 'meds', icon: '📋', label: 'Mauli List' },
+        { key: 'fab', icon: '⌕', isFab: true },
+        { key: 'docs', icon: '🩺', label: 'Doctors' },
+        { key: 'settings', icon: '⚙️', label: 'Admin' }
+      ];
+
+      return items.map(tab => {
+        if (tab.isFab) {
+          return `
+            <button onclick="handleFabClick()" class="fab-btn w-11 h-11 rounded-full bg-[#10b981] hover:bg-[#059669] text-white font-extrabold text-xl flex items-center justify-center border-2 border-[#064e3b] active:scale-90 transition">
+              ${isAdmin ? '+' : '⌕'}
+            </button>
+          `;
+        }
+        const active = route[0] === tab.key;
+        return `
+          <button onclick="navigate('${tab.key}')" class="flex-1 py-1.5 flex flex-col items-center justify-center transition active:scale-95 ${active ? 'nav-active' : 'text-emerald-200/70 hover:text-white'}">
+            <span class="nav-icon-bg w-8 h-6 rounded-xl flex items-center justify-center text-sm mb-0.5 transition">${tab.icon}</span>
+            <span class="text-[10px] leading-tight font-medium">${tab.label}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function handleFabClick() {
+      if (isAdmin) {
+        openMedicineForm();
+      } else {
+        navigate('meds');
+        setTimeout(() => {
+          const el = $('search-input');
+          if (el) el.focus();
+        }, 120);
+      }
+    }
+
+    function renderMedicineCard(m, options = {}) {
+      const { showAdminActions = true, doctorMedicineLinkId = null } = options;
+      const brand = brandDisplay(m);
+      
+      return `
+        <div class="bg-white rounded-xl p-3 border border-slate-200 shadow-xs hover:shadow-md transition flex gap-3 items-start relative group">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <h3 class="font-extrabold text-sm text-emerald-950 uppercase tracking-tight">${esc(brand)}</h3>
+              ${m.inStore === false ? '<span class="text-[9px] bg-slate-100 text-slate-500 font-semibold px-1.5 py-0.5 rounded">Master Only</span>' : ''}
+            </div>
+
+            <p class="text-xs font-semibold text-sky-700 leading-snug mt-0.5">${esc(m.composition || m.name || 'Composition not specified')}</p>
+
+            ${m.company ? `<p class="text-[11px] text-slate-500 font-medium mt-0.5">Mfg: ${esc(m.company)}</p>` : ''}
+
+            <div class="flex flex-wrap gap-1.5 mt-2 items-center">
+              ${m.dosage ? `
+                <span class="inline-flex items-center text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md">
+                  ${getDosageIcon(m.dosage)}
+                  ${esc(m.dosage)}
+                </span>
+              ` : ''}
+
+              ${m.cls ? `
+                <span class="inline-flex items-center text-[10px] font-bold text-amber-900 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md">
+                  ${esc(m.cls)}
+                </span>
+              ` : ''}
+            </div>
+
+            ${doctorMedicineLinkId && isAdmin ? `
+              <div class="mt-2.5 pt-2 border-t border-slate-100 flex gap-2">
+                <button onclick="unlinkDoctorMedicine('${doctorMedicineLinkId}')" class="text-[10px] font-bold text-rose-600 hover:text-rose-700 bg-rose-50 px-2 py-1 rounded-md">
+                  Remove from Doctor
+                </button>
+              </div>
+            ` : ''}
+
+            ${showAdminActions && isAdmin && !doctorMedicineLinkId ? `
+              <div class="mt-2.5 pt-2 border-t border-slate-100 flex gap-2">
+                <button onclick="openMedicineForm('${m.id}')" class="text-[11px] font-bold text-emerald-700 hover:text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md">
+                  ✏️ Edit
+                </button>
+                ${m.inStore === false ? `
+                  <button onclick="addToStoreList('${m.id}')" class="text-[11px] font-bold text-sky-700 hover:text-sky-800 bg-sky-50 px-2.5 py-1 rounded-md">
+                    + Add to Store
+                  </button>
+                ` : ''}
+                <button onclick="confirmDeleteMedicine('${m.id}')" class="text-[11px] font-bold text-rose-600 hover:text-rose-700 bg-rose-50 px-2.5 py-1 rounded-md ml-auto">
+                  🗑️ Delete
+                </button>
+              </div>
+            ` : ''}
+          </div>
+
+          <div class="flex-shrink-0">
+            ${m.photo ? `
+              <img src="${m.photo}" onclick="openImageOverlay('${m.photo}')" class="w-16 h-16 rounded-xl object-cover border border-emerald-100 shadow-xs cursor-pointer active:scale-95 transition" alt="Medicine photo">
+            ` : `
+              <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-emerald-50 to-emerald-100 border border-emerald-200/60 flex items-center justify-center text-2xl shadow-xs">
+                💊
+              </div>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderHome() {
+      const activeStoreCount = S.meds.filter(m => m.inStore !== false).length;
+
+      return `
+        <div class="space-y-3.5 pb-2 animate-fade-in flex flex-col justify-between min-h-[calc(100vh-210px)]">
+          <!-- Search Bar -->
+          <div class="relative">
+            <input
+              id="search-input"
+              type="text"
+              placeholder="Search brand name, composition / salt, compan..."
+              value="${esc(searchQuery)}"
+              oninput="handleSearch(this.value)"
+              class="w-full pl-9 pr-9 py-2.5 rounded-xl bg-white border border-slate-300 text-xs sm:text-sm shadow-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none placeholder-slate-400"
+            >
+            <span class="absolute left-3 top-3 text-emerald-800">
+              <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/></svg>
+            </span>
+            ${searchQuery ? `
+              <button onclick="clearSearch()" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 font-bold text-xs p-1">✕</button>
+            ` : ''}
+          </div>
+
+          ${searchQuery ? `
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-xs text-slate-500 font-bold px-1">
+                <span>Search results for "${esc(searchQuery)}"</span>
+                <span>${S.meds.filter(m => matchesSearch(searchQuery, m)).length} found</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                ${S.meds.filter(m => matchesSearch(searchQuery, m)).map(m => renderMedicineCard(m)).join('') || `
+                  <div class="bg-white rounded-xl p-8 text-center text-slate-400 text-xs sm:col-span-2 border border-slate-200">
+                    No matching medicines found in catalog.
+                  </div>
+                `}
+              </div>
+            </div>
+          ` : `
+            <!-- 4 Top Tiles in 2x2 Grid with Balanced Height -->
+            <div class="grid grid-cols-2 gap-2.5">
+              <!-- Tile 1: CLASSIFICATION -->
+              <div onclick="navigate('cls')" class="bg-[#064e3b] text-white p-3.5 sm:p-4 rounded-2xl shadow-xs cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[115px] sm:min-h-[125px] active:scale-[0.98] transition">
+                <div>
+                  <h3 class="font-extrabold text-xs sm:text-sm tracking-wide uppercase leading-tight text-white">CLASSIFICATION</h3>
+                  <p class="text-[11px] text-emerald-200 mt-1">Therapeutic Classes</p>
+                </div>
+                <div class="flex items-end justify-between mt-2">
+                  <span class="text-xs font-bold text-[#fbbf24] hover:underline">${S.cls.length} categories ›</span>
+                  <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/10 flex items-center justify-center text-base flex-shrink-0 shadow-inner">
+                    🧬
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tile 2: DOSAGES -->
+              <div onclick="navigate('dos')" class="bg-[#064e3b] text-white p-3.5 sm:p-4 rounded-2xl shadow-xs cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[115px] sm:min-h-[125px] active:scale-[0.98] transition">
+                <div>
+                  <h3 class="font-extrabold text-xs sm:text-sm tracking-wide uppercase leading-tight text-white">DOSAGES</h3>
+                  <p class="text-[11px] text-emerald-200 mt-1">Formulations</p>
+                </div>
+                <div class="flex items-end justify-between mt-2">
+                  <span class="text-xs font-bold text-[#fbbf24] hover:underline">${S.dos.length} forms ›</span>
+                  <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/10 flex items-center justify-center text-sm flex-shrink-0 shadow-inner font-bold text-white">
+                    ⊘
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tile 3: DOCTORS -->
+              <div onclick="navigate('docs')" class="bg-[#064e3b] text-white p-3.5 sm:p-4 rounded-2xl shadow-xs cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[115px] sm:min-h-[125px] active:scale-[0.98] transition">
+                <div>
+                  <h3 class="font-extrabold text-xs sm:text-sm tracking-wide uppercase leading-tight text-white">DOCTORS</h3>
+                  <p class="text-[11px] text-emerald-200 mt-1">Prescribers</p>
+                </div>
+                <div class="flex items-end justify-between mt-2">
+                  <span class="text-xs font-bold text-[#fbbf24] hover:underline">${S.docs.length} profiles ›</span>
+                  <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/10 flex items-center justify-center text-base flex-shrink-0 shadow-inner">
+                    🩺
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tile 4: EXPIRY / NON-MOVING -->
+              <div onclick="navigate('exp')" class="bg-[#064e3b] text-white p-3.5 sm:p-4 rounded-2xl shadow-xs cursor-pointer relative overflow-hidden flex flex-col justify-between min-h-[115px] sm:min-h-[125px] active:scale-[0.98] transition">
+                <div>
+                  <h3 class="font-extrabold text-xs sm:text-sm tracking-wide uppercase leading-tight text-white">EXPIRY / NON–MOVING</h3>
+                  <p class="text-[11px] text-emerald-200 mt-1">Batch &amp; expiry</p>
+                </div>
+                <div class="flex items-end justify-between mt-2">
+                  <span class="text-xs font-bold text-[#fbbf24] hover:underline">${S.exp.length} entries ›</span>
+                  <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/10 flex items-center justify-center text-base flex-shrink-0 shadow-inner">
+                    ⏳
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Store Catalogue Banner -->
+            <div class="bg-[#064e3b] text-white rounded-2xl p-3.5 sm:p-4 shadow-xs relative">
+              <div class="flex items-center justify-between gap-2">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="bg-[#fbbf24] text-[#451a03] font-black text-[9.5px] px-2 py-0.5 rounded tracking-wide uppercase">STORE CATALOGUE</span>
+                  <span class="text-xs text-[#a7f3d0] font-medium">A to Z Fast Reference</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-base font-black text-[#fbbf24] leading-none">${activeStoreCount}</span>
+                  <span class="text-[9.5px] font-bold text-[#86efac] uppercase tracking-wider">DRUGS</span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-emerald-700/60">
+                <div class="min-w-0">
+                  <h2 class="text-base sm:text-lg font-extrabold tracking-wide text-white leading-tight">MAULI MEDICINE LIST</h2>
+                  <p class="text-[11px] text-[#a7f3d0] truncate leading-tight mt-0.5">Active pharmacy stock with brand cards, salts &amp; photos</p>
+                </div>
+                <button onclick="navigate('meds')" class="bg-white text-[#064e3b] hover:bg-slate-100 active:scale-95 font-black text-xs px-3.5 py-2 rounded-full shadow-xs transition flex items-center gap-1 uppercase tracking-wide flex-shrink-0">
+                  <span>OPEN LIST</span> <span>➔</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Footer with Creator Attribution -->
+            <div class="bg-[#02261a] text-[#fbbf24] rounded-xl py-2 px-3 text-center text-[11px] font-bold shadow-2xs space-y-0.5 border border-emerald-950 mt-auto">
+              <p class="tracking-wide">© 2026 MAULI MEDICOSE. All Rights Reserved.</p>
+              <p class="text-[#fde047]/90 text-[10.5px] font-medium leading-tight">App Created by Anurag Pradip Chavhan</p>
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    function renderMedicines() {
+      const isMaster = medListTab === 'master' && isAdmin;
+      let list = S.meds.filter(m => isMaster || m.inStore !== false);
+
+      if (selectedLetter) {
+        list = list.filter(m => brandDisplay(m).toUpperCase().startsWith(selectedLetter));
+      }
+
+      if (selectedDosageFilter) {
+        list = list.filter(m => (m.dosage || '').toLowerCase() === selectedDosageFilter.toLowerCase());
+      }
+
+      if (searchQuery) {
+        list = list.filter(m => matchesSearch(searchQuery, m));
+      }
+
+      list.sort((a, b) => brandDisplay(a).localeCompare(brandDisplay(b)));
+
+      const letters = ['ALL', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')];
+      const popularDosages = ['All', 'Sunscreen', 'Tablet', 'Capsule', 'Syrup', 'Injection', 'Cream', 'Drops', 'Inhaler'];
+
+      return `
+        <div class="space-y-3 animate-fade-in">
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex gap-1.5 bg-slate-100 p-1 rounded-xl">
+              <button onclick="medListTab='store';render()" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${medListTab === 'store' ? 'bg-[#064e3b] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">
+                Store List (${S.meds.filter(m => m.inStore !== false).length})
+              </button>
+              ${isAdmin ? `
+                <button onclick="medListTab='master';render()" class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${medListTab === 'master' ? 'bg-[#064e3b] text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'}">
+                  Master DB (${S.meds.length})
+                </button>
+              ` : ''}
+            </div>
+
+            ${isAdmin ? `
+              <button onclick="openMedicineForm()" class="px-3.5 py-1.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-xs transition flex items-center gap-1">
+                <span>+</span> Add Medicine
+              </button>
+            ` : ''}
+          </div>
+
+          <div class="relative">
+            <input
+              id="search-input"
+              type="text"
+              placeholder="Search brand, composition / salt, company..."
+              value="${esc(searchQuery)}"
+              oninput="handleSearch(this.value)"
+              class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm shadow-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none placeholder-slate-400"
+            >
+            <span class="absolute left-3.5 top-3 text-emerald-800">
+              <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/></svg>
+            </span>
+          </div>
+
+          <div class="flex gap-1 overflow-x-auto no-scrollbar py-1">
+            ${letters.map(l => {
+              const active = (l === 'ALL' && !selectedLetter) || selectedLetter === l;
+              return `
+                <button onclick="selectedLetter='${l === 'ALL' ? '' : l}';render()" class="px-2.5 py-1 rounded-lg text-xs font-black transition flex-shrink-0 ${active ? 'bg-[#064e3b] text-white shadow-xs' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}">
+                  ${l}
+                </button>
+              `;
+            }).join('')}
+          </div>
+
+          <div class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
+            ${popularDosages.map(d => {
+              const active = (d === 'All' && !selectedDosageFilter) || selectedDosageFilter.toLowerCase() === d.toLowerCase();
+              return `
+                <button onclick="selectedDosageFilter='${d === 'All' ? '' : d}';render()" class="px-3 py-1 rounded-full text-xs font-bold transition flex-shrink-0 ${active ? 'bg-emerald-700 text-white shadow-xs' : 'bg-white text-emerald-900 border border-emerald-300/80 hover:bg-emerald-50'}">
+                  ${d}
+                </button>
+              `;
+            }).join('')}
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            ${list.map(m => renderMedicineCard(m)).join('') || `
+              <div class="bg-white rounded-xl p-8 text-center text-slate-400 text-xs sm:col-span-2 border border-slate-200">
+                No medicines found. Tap "+ Add Medicine" to create one.
+              </div>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderClassifications(r) {
+      const clsId = r[1];
+      if (clsId) {
+        const currentClass = S.cls.find(c => c.id === clsId);
+        if (!currentClass) return `<div class="p-6 text-center text-slate-400">Class not found.</div>`;
+
+        let classMeds = S.meds.filter(m => (m.cls || '').toLowerCase() === currentClass.name.toLowerCase());
+        if (searchQuery) classMeds = classMeds.filter(m => matchesSearch(searchQuery, m));
+
+        return `
+          <div class="space-y-3 animate-fade-in">
+            <div class="bg-gradient-to-r from-[#02261a] via-[#064e3b] to-[#02261a] p-4 rounded-2xl border-2 border-[#fbbf24]/50 shadow-md flex items-center justify-between text-white">
+              <div>
+                <span class="text-[11px] font-extrabold text-[#fbbf24] bg-white/10 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1.5 shadow-xs border border-[#fbbf24]/30">
+                  <span>${getCategoryEmoji(currentClass.name)}</span> Category Formulations
+                </span>
+                <h2 class="text-xl font-black text-[#fbbf24] mt-1.5 tracking-wide uppercase drop-shadow-sm">${esc(currentClass.name)}</h2>
+                <p class="text-xs text-emerald-200 font-medium">${classMeds.length} medicines in this category</p>
+              </div>
+              ${isAdmin ? `
+                <div class="flex gap-2">
+                  <button onclick="renameCategory('cls', '${currentClass.id}')" class="text-xs font-bold bg-white/15 border border-white/20 px-3 py-1.5 rounded-xl text-white shadow-2xs hover:bg-white/25">Rename</button>
+                  <button onclick="confirmDeleteCategory('cls', '${currentClass.id}')" class="text-xs font-bold bg-rose-500/20 border border-rose-400/40 px-3 py-1.5 rounded-xl text-rose-300 hover:bg-rose-500/30">Delete</button>
+                </div>
+              ` : ''}
+            </div>
+
+            <input
+              type="text"
+              placeholder="Search in ${esc(currentClass.name)}..."
+              value="${esc(searchQuery)}"
+              oninput="handleSearch(this.value)"
+              class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm shadow-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+            >
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              ${classMeds.map(m => renderMedicineCard(m)).join('') || `
+                <div class="bg-white rounded-xl p-8 text-center text-slate-400 text-xs sm:col-span-2 border border-slate-200">
+                  No medicines found in this category.
+                </div>
+              `}
+            </div>
+          </div>
+        `;
+      }
+
+      let list = [...S.cls].sort((a, b) => a.name.localeCompare(b.name));
+      if (searchQuery) {
+        list = list.filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase()));
+      }
+
+      return `
+        <div class="space-y-3 animate-fade-in">
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="Search classification..."
+              value="${esc(searchQuery)}"
+              oninput="handleSearch(this.value)"
+              class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm shadow-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none placeholder-slate-400"
+            >
+            <span class="absolute left-3.5 top-3 text-emerald-800">
+              <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/></svg>
+            </span>
+          </div>
+
+          ${isAdmin ? `
+            <div class="text-right">
+              <button onclick="promptAddCategory('cls')" class="px-3.5 py-1.5 rounded-xl bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800 shadow-sm transition">
+                + Add Classification
+              </button>
+            </div>
+          ` : ''}
+
+          <div class="grid grid-cols-2 gap-2.5">
+            ${list.map(c => {
+              const count = S.meds.filter(m => (m.cls || '').toLowerCase() === c.name.toLowerCase()).length;
+              return `
+                <div onclick="navigate('cls', '${c.id}')" class="bg-white hover:bg-emerald-50/40 border border-emerald-200/90 hover:border-emerald-500 p-3 rounded-2xl shadow-2xs cursor-pointer flex items-center gap-3 transition active:scale-[0.98] group">
+                  <div class="w-10 h-10 rounded-2xl bg-emerald-100/90 text-[#064e3b] border border-emerald-300/80 flex items-center justify-center text-lg flex-shrink-0 shadow-inner group-hover:scale-105 transition font-bold">
+                    ${getCategoryEmoji(c.name)}
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <h3 class="font-extrabold text-xs text-slate-900 leading-tight group-hover:text-emerald-950 transition truncate">${esc(c.name)}</h3>
+                    <p class="text-[11px] text-emerald-800 font-bold mt-0.5">${count} items</p>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDosages(r) {
+      const dosId = r[1];
+      if (dosId) {
+        const currentDos = S.dos.find(d => d.id === dosId);
+        if (!currentDos) return `<div class="p-6 text-center text-slate-400">Dosage form not found.</div>`;
+
+        let dosMeds = S.meds.filter(m => (m.dosage || '').toLowerCase() === currentDos.name.toLowerCase());
+        if (searchQuery) dosMeds = dosMeds.filter(m => matchesSearch(searchQuery, m));
+
+        return `
+          <div class="space-y-3 animate-fade-in">
+            <div class="bg-gradient-to-r from-[#02261a] via-[#064e3b] to-[#02261a] p-4 rounded-2xl border-2 border-[#fbbf24]/50 shadow-md flex items-center justify-between text-white">
+              <div>
+                <span class="text-[11px] font-extrabold text-[#fbbf24] bg-white/10 px-2.5 py-0.5 rounded-full inline-flex items-center gap-1.5 shadow-xs border border-[#fbbf24]/30">
+                  Formulation Category
+                </span>
+                <h2 class="text-xl font-black text-[#fbbf24] mt-1.5 tracking-wide uppercase drop-shadow-sm">${esc(currentDos.name)}</h2>
+                <p class="text-xs text-emerald-200 font-medium">${dosMeds.length} drugs in this formulation</p>
+              </div>
+              ${isAdmin ? `
+                <div class="flex gap-2">
+                  <button onclick="renameCategory('dos', '${currentDos.id}')" class="text-xs font-bold bg-white/15 border border-white/20 px-3 py-1.5 rounded-xl text-white shadow-2xs hover:bg-white/25">Rename</button>
+                  <button onclick="confirmDeleteCategory('dos', '${currentDos.id}')" class="text-xs font-bold bg-rose-500/20 border border-rose-400/40 px-3 py-1.5 rounded-xl text-rose-300 hover:bg-rose-500/30">Delete</button>
+                </div>
+              ` : ''}
+            </div>
+
+            <input
+              type="text"
+              placeholder="Search in ${esc(currentDos.name)}..."
+              value="${esc(searchQuery)}"
+              oninput="handleSearch(this.value)"
+              class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-300 text-sm shadow-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+            >
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              ${dosMeds.map(m => renderMedicineCard(m)).join('') || `
+                <div class="bg-white rounded-xl p-8 text-center text-slate-400 text-xs sm:col-span-2 border border-slate-200">
+                  No medicines found in this dosage formulation.
+                </div>
+              `}
+            </div>
+          </div>
+        `;
+      }
+
+      let list = [...S.dos].sort((a, b) => a.name.localeCompare(b.name));
+      if (searchQuery) {
+        list = list.filter(d => d.name.toLowerCase().includes(searchQuery.toLowerCase()));
+      }
+
+      return `
+        <div class="space-y-3 animate-fade-in">
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="Search dosage form or medicine..."
+              value="${esc(searchQuery)}"
+              oninput="handleSearch(this.value)"
+              class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm shadow-xs focus:ring-2 focus:ring-emerald-600 focus:outline-none placeholder-slate-400"
+            >
+            <span class="absolute left-3.5 top-3 text-emerald-800">
+              <svg class="w-4 h-4 stroke-current" fill="none" viewBox="0 0 24 24" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/></svg>
+            </span>
+          </div>
+
+          ${isAdmin ? `
+            <div class="text-right">
+              <button onclick="promptAddCategory('dos')" class="px-3.5 py-1.5 rounded-xl bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800 shadow-sm transition">
+                + Add Dosage Form
+              </button>
+            </div>
+          ` : ''}
+
+          <div class="grid grid-cols-2 gap-2.5">
+            ${list.map(d => {
+              const count = S.meds.filter(m => (m.dosage || '').toLowerCase() === d.name.toLowerCase()).length;
+              const theme = getDosageCardTheme(d.name);
+              return `
+                <div onclick="navigate('dos', '${d.id}')" class="${theme.cardBg} border ${theme.cardBorder} p-3 rounded-2xl shadow-2xs cursor-pointer flex items-center gap-3 transition active:scale-[0.98] group">
+                  <div class="w-10 h-10 rounded-2xl ${theme.iconBg} flex items-center justify-center text-lg flex-shrink-0 shadow-inner group-hover:scale-105 transition font-bold">
+                    ${theme.symbol}
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <h3 class="font-extrabold text-xs text-slate-900 leading-tight group-hover:text-emerald-950 transition truncate">${esc(d.name)}</h3>
+                    <p class="text-[11px] text-emerald-800 font-bold mt-0.5">${count} items</p>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDoctors(r) {
+      const docId = r[1];
+      if (docId) {
+        const doc = S.docs.find(d => d.id === docId);
+        if (!doc) return `<div class="p-6 text-center text-slate-400">Doctor not found.</div>`;
+
+        const links = S.dm.filter(l => l.doctorId === doc.id);
+        const linkedMeds = links.map(l => ({
+          ...S.meds.find(m => m.id === l.medId),
+          linkId: l.id
+        })).filter(m => m.id);
+
+        let filtered = linkedMeds;
+        if (searchQuery) filtered = filtered.filter(m => matchesSearch(searchQuery, m));
+
+        return `
+          <div class="space-y-3 animate-fade-in">
+            <div class="bg-gradient-to-r from-[#02261a] via-[#064e3b] to-[#02261a] p-4 rounded-2xl border-2 border-[#fbbf24]/50 shadow-md flex items-start gap-3 text-white">
+              <div class="w-14 h-14 rounded-2xl bg-white/10 text-white flex items-center justify-center text-2xl flex-shrink-0 border border-white/20">
+                ${doc.photo ? `<img src="${doc.photo}" class="w-full h-full object-cover rounded-2xl">` : '🩺'}
+              </div>
+              <div class="flex-1 min-w-0">
+                <h2 class="text-lg font-black text-[#fbbf24] tracking-wide uppercase drop-shadow-sm">${esc(doc.name)}</h2>
+                <p class="text-xs font-semibold text-emerald-200">${esc(doc.qual)} ${doc.extra ? `· ${esc(doc.extra)}` : ''}</p>
+                ${doc.spec ? `<span class="inline-block mt-1 text-[10px] font-bold text-amber-900 bg-[#fbbf24] px-2 py-0.5 rounded">${esc(doc.spec)}</span>` : ''}
+                <p class="text-xs text-emerald-100 mt-1">📍 ${esc(doc.clinic || 'Clinic not specified')}</p>
+              </div>
+              ${isAdmin ? `
+                <div class="flex flex-col gap-1.5">
+                  <button onclick="openDoctorForm('${doc.id}')" class="text-xs font-bold bg-white/15 px-2.5 py-1 rounded-lg text-white hover:bg-white/25">Edit</button>
+                  <button onclick="confirmDeleteDoctor('${doc.id}')" class="text-xs font-bold bg-rose-500/20 px-2.5 py-1 rounded-lg text-rose-300 hover:bg-rose-500/30">Delete</button>
+                </div>
+              ` : ''}
+            </div>
+
+            <div class="flex items-center justify-between pt-1">
+              <div>
+                <h3 class="text-xs font-extrabold uppercase text-slate-700">Prescribed Medicines (${linkedMeds.length})</h3>
+                <p class="text-[11px] text-slate-400">Regularly prescribed formulations</p>
+              </div>
+              ${isAdmin ? `
+                <button onclick="openDoctorMedicinePicker('${doc.id}')" class="px-3 py-1.5 rounded-xl bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold transition shadow-xs">
+                  + Add Medicine
+                </button>
+              ` : ''}
+            </div>
+
+            <input
+              type="text"
+              placeholder="Search in doctor's formulation list..."
+              value="${esc(searchQuery)}"
+              oninput="handleSearch(this.value)"
+              class="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-sm shadow-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
+            >
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              ${filtered.map(m => renderMedicineCard(m, { doctorMedicineLinkId: m.linkId })).join('') || `
+                <div class="bg-white rounded-xl p-8 text-center text-slate-400 text-xs sm:col-span-2">
+                  No medicines linked to this doctor yet. Click "+ Add Medicine" to assign formulations.
+                </div>
+              `}
+            </div>
+          </div>
+        `;
+      }
+
+      let list = S.docs;
+      if (searchQuery) {
+        list = list.filter(d => (d.name + ' ' + d.qual + ' ' + d.spec + ' ' + d.clinic).toLowerCase().includes(searchQuery.toLowerCase()));
+      }
+
+      return `
+        <div class="space-y-3 animate-fade-in">
+          <div class="flex items-center justify-between">
+            <input
+              type="text"
+              placeholder="Search doctor name, specialty, clinic..."
+              value="${esc(searchQuery)}"
+              oninput="handleSearch(this.value)"
+              class="flex-1 mr-2 px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-sm shadow-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+            >
+            ${isAdmin ? `
+              <button onclick="openDoctorForm()" class="px-3.5 py-2.5 rounded-xl bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800 transition whitespace-nowrap">
+                + Add Doctor
+              </button>
+            ` : ''}
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            ${list.map(d => {
+              const medCount = S.dm.filter(l => l.doctorId === d.id).length;
+              return `
+                <div onclick="navigate('docs', '${d.id}')" class="bg-white p-3.5 rounded-2xl border border-slate-200 hover:border-emerald-500 shadow-xs cursor-pointer flex items-center justify-between group transition">
+                  <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-12 h-12 rounded-xl bg-sky-50 text-sky-700 flex items-center justify-center text-xl flex-shrink-0 border border-sky-100">
+                      ${d.photo ? `<img src="${d.photo}" class="w-full h-full object-cover rounded-xl">` : '🩺'}
+                    </div>
+                    <div class="min-w-0">
+                      <h3 class="font-extrabold text-sm text-slate-900 truncate">${esc(d.name)}</h3>
+                      <p class="text-xs text-emerald-800 font-semibold truncate">${esc(d.qual || '')} ${d.spec ? `· ${esc(d.spec)}` : ''}</p>
+                      <p class="text-[11px] text-slate-500 mt-0.5 truncate">${esc(d.clinic || '')} · <b class="text-emerald-700">${medCount} medicines</b></p>
+                    </div>
+                  </div>
+                  <span class="text-slate-300 group-hover:text-emerald-600 transition text-base ml-2">›</span>
+                </div>
+              `;
+            }).join('') || `
+              <div class="bg-white rounded-xl p-8 text-center text-slate-400 text-xs sm:col-span-2">
+                No doctors registered yet.
+              </div>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderExpiry() {
+      let list = [...S.exp];
+
+      if (selectedExpiryFilter === 'expired') {
+        list = list.filter(x => {
+          const d = calculateDaysLeft(x.expiry);
+          return d !== null && d <= 0;
+        });
+      } else if (selectedExpiryFilter === 'near') {
+        list = list.filter(x => {
+          const d = calculateDaysLeft(x.expiry);
+          return d !== null && d > 0 && d <= 90;
+        });
+      } else if (selectedExpiryFilter === 'nonMoving') {
+        list = list.filter(x => x.nonMoving);
+      } else if (selectedExpiryFilter === 'moving') {
+        list = list.filter(x => !x.nonMoving);
+      }
+
+      if (searchQuery) {
+        list = list.filter(x => matchesSearch(searchQuery, x));
+      }
+
+      list.sort((a, b) => (a.expiry || '9999').localeCompare(b.expiry || '9999'));
+
+      return `
+        <div class="space-y-3 animate-fade-in">
+          <div class="bg-gradient-to-r from-[#02261a] via-[#064e3b] to-[#02261a] p-3.5 rounded-2xl border-2 border-[#fbbf24]/50 shadow-md flex items-center justify-between text-white">
+            <div>
+              <span class="text-[10px] font-extrabold text-[#fbbf24] bg-white/10 px-2 py-0.5 rounded-full inline-flex items-center gap-1 shadow-xs border border-[#fbbf24]/30">
+                <span>⏳</span> Stock Tracking &amp; Expiry
+              </span>
+              <h2 class="text-lg font-black text-[#fbbf24] mt-1 tracking-wide uppercase drop-shadow-sm">EXPIRY &amp; NON-MOVING</h2>
+              <p class="text-xs text-emerald-200 font-medium">${S.exp.length} total entries tracked</p>
+            </div>
+            ${isAdmin ? `
+              <button onclick="openExpiryForm()" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition shadow-xs">
+                + Add Batch
+              </button>
+            ` : ''}
+          </div>
+
+          <div class="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+            <button onclick="setExpiryFilter('')" class="px-3.5 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap ${!selectedExpiryFilter ? 'bg-slate-900 text-white shadow-xs' : 'bg-white text-slate-700 border border-slate-200'}">
+              All Entries (${S.exp.length})
+            </button>
+            <button onclick="setExpiryFilter('moving')" class="px-3.5 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap ${selectedExpiryFilter === 'moving' ? 'bg-emerald-700 text-white shadow-xs' : 'bg-white text-emerald-800 border border-emerald-300'}">
+              Active Stock
+            </button>
+            <button onclick="setExpiryFilter('near')" class="px-3.5 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap ${selectedExpiryFilter === 'near' ? 'bg-amber-600 text-white shadow-xs' : 'bg-white text-amber-800 border border-amber-300'}">
+              Near Expiry (&le; 90d)
+            </button>
+            <button onclick="setExpiryFilter('expired')" class="px-3.5 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap ${selectedExpiryFilter === 'expired' ? 'bg-rose-600 text-white shadow-xs' : 'bg-white text-rose-700 border border-rose-300'}">
+              Expired
+            </button>
+            <button onclick="setExpiryFilter('nonMoving')" class="px-3.5 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap ${selectedExpiryFilter === 'nonMoving' ? 'bg-purple-700 text-white shadow-xs' : 'bg-white text-purple-700 border border-purple-300'}">
+              Non-Moving Stock
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between gap-2">
+            <div class="relative flex-1">
+              <input
+                type="text"
+                placeholder="Search batch, medicine, salt..."
+                value="${esc(searchQuery)}"
+                oninput="handleSearch(this.value)"
+                class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white border border-slate-300 text-sm shadow-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+              >
+              <span class="absolute left-3 top-3 text-slate-400">🔍</span>
+            </div>
+            ${isAdmin ? `
+              <button onclick="openExpiryForm()" class="px-3.5 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition whitespace-nowrap shadow-xs flex items-center gap-1.5">
+                <span>+</span> Add Medicine Batch
+              </button>
+            ` : ''}
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            ${list.map(item => {
+              const days = calculateDaysLeft(item.expiry);
+              let tag = '';
+              if (item.expiry) {
+                if (days < 0) {
+                  tag = '<span class="bg-rose-600 text-white text-[10px] font-black px-2 py-0.5 rounded shadow-2xs uppercase tracking-wide">Expired</span>';
+                } else if (days <= 90) {
+                  tag = `<span class="bg-amber-500 text-white text-[10px] font-black px-2 py-0.5 rounded shadow-2xs uppercase tracking-wide">${days}d left</span>`;
+                } else {
+                  tag = `<span class="bg-emerald-100 text-emerald-900 border border-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded">Exp: ${esc(item.expiry)}</span>`;
+                }
+              }
+
+              return `
+                <div class="bg-white rounded-2xl p-3.5 border-2 border-slate-200/80 hover:border-slate-300 shadow-sm flex items-stretch gap-3 transition">
+                  <div class="flex-1 min-w-0 flex flex-col justify-between">
+                    <div>
+                      <div class="flex items-start justify-between gap-1 flex-wrap">
+                        <h4 class="font-extrabold text-base text-rose-600 tracking-tight uppercase leading-snug break-words">
+                          ${esc(item.name)}
+                        </h4>
+                        <div class="flex gap-1 items-center flex-wrap">
+                          ${tag}
+                          ${item.nonMoving ? '<span class="bg-purple-100 text-purple-900 border border-purple-300 text-[10px] font-bold px-1.5 py-0.5 rounded">Non-Moving</span>' : ''}
+                        </div>
+                      </div>
+
+                      ${item.composition ? `<p class="text-xs font-semibold text-slate-700 leading-snug mt-0.5">${esc(item.composition)}</p>` : ''}
+
+                      ${item.company ? `<p class="text-xs text-black font-bold mt-1">Mfg: <span class="font-black text-black">${esc(item.company)}</span></p>` : ''}
+
+                      <div class="flex flex-wrap gap-1 mt-1.5">
+                        ${item.dosage ? `<span class="text-[10px] font-bold bg-amber-50 text-amber-900 border border-amber-200 px-2 py-0.5 rounded">${esc(item.dosage)}</span>` : ''}
+                        ${item.cls ? `<span class="text-[10px] font-bold bg-sky-50 text-sky-900 border border-sky-200 px-2 py-0.5 rounded">${esc(item.cls)}</span>` : ''}
+                      </div>
+                    </div>
+
+                    <div class="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between flex-wrap gap-2 text-xs">
+                      <div class="text-black font-mono space-y-0.5">
+                        <div>Batch: <b class="text-black font-extrabold">${esc(item.batch || '—')}</b></div>
+                        <div>Amount: <b class="text-black font-extrabold">₹${esc(item.mrp || '0')}</b></div>
+                      </div>
+
+                      <div class="bg-slate-100 border border-slate-300 text-black px-3 py-1 rounded-xl text-center shadow-2xs">
+                        <span class="block text-base font-black text-black leading-none">${esc(item.qty || '0')}</span>
+                        <span class="text-[9px] font-black text-slate-700 uppercase tracking-wider">QTY</span>
+                      </div>
+                    </div>
+
+                    ${isAdmin ? `
+                      <div class="mt-2 pt-1.5 flex gap-2">
+                        <button onclick="openExpiryForm('${item.id}')" class="text-[11px] font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded-lg">Edit</button>
+                        <button onclick="confirmDeleteExpiry('${item.id}')" class="text-[11px] font-bold bg-rose-50 hover:bg-rose-100 text-rose-700 px-2.5 py-1 rounded-lg">Delete</button>
+                      </div>
+                    ` : ''}
+                  </div>
+
+                  <div class="flex-shrink-0 flex items-center justify-center">
+                    ${item.photo ? `
+                      <img src="${item.photo}" onclick="openImageOverlay('${item.photo}')" class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover border-2 border-slate-200 shadow-sm cursor-pointer active:scale-95 transition" alt="Medicine photo">
+                    ` : `
+                      <div onclick="${isAdmin ? `openExpiryForm('${item.id}')` : ''}" class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 border-2 border-dashed border-slate-300 flex flex-col items-center justify-center text-center p-2 text-slate-400">
+                        <span class="text-2xl">📸</span>
+                        <span class="text-[10px] font-bold text-slate-500 mt-1">No photo</span>
+                      </div>
+                    `}
+                  </div>
+                </div>
+              `;
+            }).join('') || `
+              <div class="bg-white rounded-2xl p-8 text-center text-slate-400 text-xs sm:col-span-2 border border-slate-200">
+                No expiry or non-moving entries logged. Tap "+ Add Medicine Batch" to record stock.
+              </div>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    function setExpiryFilter(f) {
+      selectedExpiryFilter = f;
+      render();
+    }
+
+    function renderSettings() {
+      const c = S.cfg;
+      return `
+        <div class="space-y-3.5 animate-fade-in">
+          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl ${isAdmin ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'} flex items-center justify-center text-lg font-bold">
+                ${isAdmin ? '🛡️' : '🔒'}
+              </div>
+              <div>
+                <h3 class="text-sm font-extrabold text-slate-900">${isAdmin ? 'Admin Mode (Active)' : 'Staff / Doctor View (Locked)'}</h3>
+                <p class="text-xs text-slate-500">${isAdmin ? 'You have full editing permissions.' : 'Enter PIN to edit medicine records and settings.'}</p>
+              </div>
+            </div>
+            <button onclick="toggleAdminMode()" class="px-3.5 py-1.5 rounded-xl text-xs font-bold ${isAdmin ? 'bg-slate-100 text-slate-700 hover:bg-slate-200' : 'bg-emerald-700 text-white hover:bg-emerald-800 shadow-xs'} transition">
+              ${isAdmin ? 'Lock Mode' : 'Unlock PIN'}
+            </button>
+          </div>
+
+          ${isAdmin ? `
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
+              <h3 class="text-xs font-black uppercase text-emerald-900 tracking-wider">🏪 Pharmacy Profile Details</h3>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div>
+                  <label class="block text-slate-500 font-semibold mb-1">Pharmacy Name</label>
+                  <input id="cfg-name" value="${esc(c.name)}" class="w-full p-2 rounded-lg border border-slate-200 font-bold">
+                </div>
+                <div>
+                  <label class="block text-slate-500 font-semibold mb-1">Business Type</label>
+                  <input id="cfg-type" value="${esc(c.type)}" class="w-full p-2 rounded-lg border border-slate-200 font-bold">
+                </div>
+                <div>
+                  <label class="block text-slate-500 font-semibold mb-1">Proprietor Name</label>
+                  <input id="cfg-prop" value="${esc(c.prop)}" class="w-full p-2 rounded-lg border border-slate-200 font-semibold">
+                </div>
+                <div>
+                  <label class="block text-slate-500 font-semibold mb-1">Pharmacist Qualification</label>
+                  <input id="cfg-pharm" value="${esc(c.pharm)}" class="w-full p-2 rounded-lg border border-slate-200 font-semibold">
+                </div>
+                <div>
+                  <label class="block text-slate-500 font-semibold mb-1">Drug License (D.L. No.)</label>
+                  <input id="cfg-dl" value="${esc(c.dl)}" class="w-full p-2 rounded-lg border border-slate-200 font-mono">
+                </div>
+                <div>
+                  <label class="block text-slate-500 font-semibold mb-1">Phone Number</label>
+                  <input id="cfg-phone" value="${esc(c.phone)}" class="w-full p-2 rounded-lg border border-slate-200 font-mono">
+                </div>
+                <div>
+                  <label class="block text-slate-500 font-semibold mb-1">WhatsApp Number</label>
+                  <input id="cfg-wa" value="${esc(c.wa)}" class="w-full p-2 rounded-lg border border-slate-200 font-mono">
+                </div>
+                <div>
+                  <label class="block text-slate-500 font-semibold mb-1">Email</label>
+                  <input id="cfg-email" value="${esc(c.email)}" class="w-full p-2 rounded-lg border border-slate-200">
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="block text-slate-500 font-semibold mb-1">Full Shop Address</label>
+                  <input id="cfg-address" value="${esc(c.address)}" class="w-full p-2 rounded-lg border border-slate-200">
+                </div>
+              </div>
+
+              <div class="flex justify-end pt-2">
+                <button onclick="savePharmacyDetails()" class="px-4 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold shadow-xs transition">
+                  Save Pharmacy Info
+                </button>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-2">
+              <h3 class="text-xs font-black uppercase text-emerald-900 tracking-wider">🔑 Security PIN</h3>
+              <p class="text-xs text-slate-500">Current default PIN is <b>${esc(c.pin || '1234')}</b>. Change it anytime.</p>
+              <div class="flex gap-2 items-center pt-1">
+                <input id="cfg-new-pin" type="password" maxlength="8" placeholder="Enter new PIN" class="px-3 py-1.5 rounded-lg border border-slate-200 text-xs w-36 font-mono">
+                <button onclick="updateAdminPin()" class="px-3.5 py-1.5 rounded-lg bg-slate-800 text-white text-xs font-bold hover:bg-slate-900 transition">
+                  Change PIN
+                </button>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs space-y-3">
+              <h3 class="text-xs font-black uppercase text-emerald-900 tracking-wider">💾 Data Backup &amp; CSV Tools</h3>
+              <p class="text-xs text-slate-500">Export your medicine master list, download full backups, or restore existing data instantly.</p>
+              
+              <div class="flex flex-wrap gap-2 pt-1">
+                <button onclick="downloadJsonBackup()" class="px-3 py-2 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100 text-xs font-bold transition">
+                  📥 Download Full JSON Backup
+                </button>
+                <button onclick="exportMedicinesCsv()" class="px-3 py-2 rounded-xl bg-sky-50 text-sky-800 border border-sky-200 hover:bg-sky-100 text-xs font-bold transition">
+                  📊 Export Medicines (CSV)
+                </button>
+                <button onclick="$('restore-file-input').click()" class="px-3 py-2 rounded-xl bg-amber-50 text-amber-900 border border-amber-200 hover:bg-amber-100 text-xs font-bold transition">
+                  📤 Restore / Import Backup
+                </button>
+                <input id="restore-file-input" type="file" accept=".json,.csv" class="hidden" onchange="handleRestoreFile(this)">
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-4 border border-rose-200 shadow-xs space-y-2">
+              <h3 class="text-xs font-black uppercase text-rose-800 tracking-wider">⚠️ Reset Data</h3>
+              <p class="text-xs text-slate-500">Reset catalog back to initial factory demo seed (Sunshade Sunscreen only).</p>
+              <button onclick="confirmResetDefaults()" class="px-3.5 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition">
+                Reset to Default Seed
+              </button>
+            </div>
+          ` : ''}
+
+          <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-xs text-center space-y-1">
+            <h4 class="text-xs font-black text-slate-800 tracking-wider">MAULI MEDICOSE APP SYSTEM</h4>
+            <p class="text-[11px] text-slate-400">Offline-capable Local Storage • Instant Real-time Reference</p>
+            <p class="text-[10px] text-emerald-700 font-mono font-bold pt-1">Status: Active &amp; Operational</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function openMedicineForm(medId = null) {
+      const isEdit = !!medId;
+      const m = isEdit ? S.meds.find(x => x.id === medId) : null;
+      let photoData = m ? m.photo || '' : '';
+
+      const content = `
+        <div class="space-y-3 animate-fade-in text-left">
+          <div class="flex items-center justify-between border-b pb-2">
+            <h2 class="text-base font-extrabold text-slate-900">${isEdit ? 'Edit Medicine Formulation' : 'Add New Medicine'}</h2>
+            <button onclick="goBack()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Brand Name *</label>
+            <input id="f-brand" placeholder="e.g. Sunshade Sunscreen, Augmentin 625" value="${esc(m ? (m.brand || m.name) : '')}" class="w-full p-2.5 rounded-xl border border-slate-300 text-sm font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Composition / Salt Content *</label>
+            <input id="f-comp" placeholder="e.g. Octinoxate + Avobenzone + Zinc Oxide" value="${esc(m ? m.composition : '')}" class="w-full p-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Manufacturer</label>
+              <input id="f-comp-co" placeholder="e.g. Cipla, Curatio, Alkem" value="${esc(m ? m.company : '')}" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Dosage Form</label>
+              <select id="f-dosage" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                <option value="">— Select Form —</option>
+                ${S.dos.map(d => `<option value="${esc(d.name)}" ${m && m.dosage === d.name ? 'selected' : ''}>${esc(d.name)}</option>`).join('')}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Therapeutic Classification</label>
+            <select id="f-cls" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+              <option value="">— Select Category —</option>
+              ${S.cls.map(c => `<option value="${esc(c.name)}" ${m && m.cls === c.name ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}
+            </select>
+          </div>
+
+          <div class="bg-emerald-50/60 p-3 rounded-xl border border-emerald-200">
+            <label class="block text-xs font-bold text-emerald-950 mb-1">📷 Medicine Photo (Camera / Gallery)</label>
+            <input type="file" id="f-photo-input" accept="image/*" class="text-xs w-full text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-700 file:text-white hover:file:bg-emerald-800">
+            
+            <div id="photo-preview-wrap" class="mt-2.5 ${photoData ? '' : 'hidden'} flex items-center gap-3">
+              <img id="photo-preview-img" src="${photoData}" class="w-16 h-16 rounded-xl object-cover border border-emerald-300 shadow-xs">
+              <div>
+                <span class="text-[11px] text-emerald-800 font-bold block">✓ Photo attached</span>
+                <button type="button" onclick="clearPhotoSelection()" class="text-xs text-rose-600 font-bold hover:underline">Remove photo</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2 flex gap-2">
+            <button onclick="saveMedicineData('${medId || ''}')" class="flex-1 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-xs transition">
+              ${isEdit ? 'Save Changes' : 'Add to Catalog'}
+            </button>
+            <button onclick="goBack()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+              Cancel
+            </button>
+          </div>
+        </div>
+      `;
+
+      $('app-view').innerHTML = `<div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">${content}</div>`;
+      
+      const fileInp = $('f-photo-input');
+      if (fileInp) {
+        fileInp.onchange = async e => {
+          const file = e.target.files[0];
+          if (!file) return;
+          try {
+            photoData = await compressImageFile(file);
+            $('photo-preview-img').src = photoData;
+            $('photo-preview-wrap').classList.remove('hidden');
+          } catch (err) {
+            showToast('Failed to process image');
+          }
+        };
+      }
+
+      window.clearPhotoSelection = () => {
+        photoData = '';
+        if (fileInp) fileInp.value = '';
+        $('photo-preview-wrap').classList.add('hidden');
+      };
+
+      window.saveMedicineData = id => {
+        const brand = $('f-brand').value.trim();
+        const comp = $('f-comp').value.trim();
+        const co = $('f-comp-co').value.trim();
+        const dosage = $('f-dosage').value;
+        const cls = $('f-cls').value;
+
+        if (!brand && !comp) {
+          showToast('Please enter brand or salt composition');
+          return;
+        }
+
+        if (id) {
+          const idx = S.meds.findIndex(x => x.id === id);
+          if (idx !== -1) {
+            S.meds[idx] = {
+              ...S.meds[idx],
+              brand: brand || comp,
+              name: comp || brand,
+              composition: comp || brand,
+              company: co,
+              dosage,
+              cls,
+              photo: photoData || S.meds[idx].photo
+            };
+          }
+        } else {
+          S.meds.unshift({
+            id: uid(),
+            brand: brand || comp,
+            name: comp || brand,
+            composition: comp || brand,
+            company: co,
+            dosage,
+            cls,
+            photo: photoData,
+            inStore: true
+          });
+        }
+
+        saveState();
+        showToast(id ? 'Medicine updated' : 'Medicine added to list');
+        goBack();
+      };
+    }
+
+    function openDoctorForm(docId = null) {
+      const isEdit = !!docId;
+      const d = isEdit ? S.docs.find(x => x.id === docId) : null;
+
+      const content = `
+        <div class="space-y-3 animate-fade-in text-left">
+          <div class="flex items-center justify-between border-b pb-2">
+            <h2 class="text-base font-extrabold text-slate-900">${isEdit ? 'Edit Doctor Profile' : 'Add New Doctor'}</h2>
+            <button onclick="goBack()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Doctor Name *</label>
+            <input id="df-name" placeholder="e.g. Dr. Rajesh Sharma" value="${esc(d ? d.name : '')}" class="w-full p-2.5 rounded-xl border border-slate-300 text-sm font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Degrees / Qualifications</label>
+            <input id="df-qual" placeholder="e.g. MBBS, MD (Medicine)" value="${esc(d ? d.qual : '')}" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Specialization</label>
+              <input id="df-spec" placeholder="e.g. Physician, Pediatrician" value="${esc(d ? d.spec : '')}" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Reg / Notes</label>
+              <input id="df-extra" placeholder="e.g. Reg 10423" value="${esc(d ? d.extra : '')}" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Clinic / Hospital</label>
+            <input id="df-clinic" placeholder="e.g. Subhedar Hospital, Nagpur" value="${esc(d ? d.clinic : '')}" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+
+          <div class="pt-2 flex gap-2">
+            <button onclick="saveDoctorData('${docId || ''}')" class="flex-1 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-xs transition">
+              ${isEdit ? 'Save Changes' : 'Register Doctor'}
+            </button>
+            <button onclick="goBack()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+              Cancel
+            </button>
+          </div>
+        </div>
+      `;
+
+      $('app-view').innerHTML = `<div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">${content}</div>`;
+
+      window.saveDoctorData = id => {
+        const name = $('df-name').value.trim();
+        const qual = $('df-qual').value.trim();
+        const spec = $('df-spec').value.trim();
+        const extra = $('df-extra').value.trim();
+        const clinic = $('df-clinic').value.trim();
+
+        if (!name) {
+          showToast('Doctor name is required');
+          return;
+        }
+
+        if (id) {
+          const idx = S.docs.findIndex(x => x.id === id);
+          if (idx !== -1) {
+            S.docs[idx] = { ...S.docs[idx], name, qual, spec, extra, clinic };
+          }
+        } else {
+          S.docs.push({ id: uid(), name, qual, spec, extra, clinic });
+        }
+
+        saveState();
+        showToast(id ? 'Doctor details updated' : 'Doctor registered');
+        goBack();
+      };
+    }
+
+    function openDoctorMedicinePicker(docId) {
+      const assignedSet = new Set(S.dm.filter(x => x.doctorId === docId).map(x => x.medId));
+      let pickerQuery = '';
+
+      function renderPicker() {
+        const filtered = S.meds.filter(m => matchesSearch(pickerQuery, m));
+
+        return `
+          <div class="space-y-3 animate-fade-in text-left">
+            <div class="flex items-center justify-between border-b pb-2">
+              <h2 class="text-base font-extrabold text-slate-900">Add Medicine to Doctor</h2>
+              <button onclick="goBack()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+            </div>
+
+            <input
+              id="picker-search"
+              type="text"
+              placeholder="Search catalog medicines..."
+              value="${esc(pickerQuery)}"
+              class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-slate-200 text-sm shadow-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
+            >
+
+            <div class="max-h-[60vh] overflow-y-auto space-y-2 pr-1">
+              ${filtered.map(m => {
+                const isAdded = assignedSet.has(m.id);
+                return `
+                  <div class="p-2.5 rounded-xl border border-slate-200 bg-white flex items-center justify-between gap-2 shadow-xs">
+                    <div class="min-w-0">
+                      <h4 class="font-extrabold text-xs text-slate-900 uppercase truncate">${esc(brandDisplay(m))}</h4>
+                      <p class="text-[11px] text-sky-700 font-semibold truncate">${esc(m.composition || '')}</p>
+                    </div>
+                    ${isAdded ? `
+                      <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded">✓ Added</span>
+                    ` : `
+                      <button onclick="linkMedicineToDoc('${docId}', '${m.id}')" class="px-3 py-1 bg-sky-700 hover:bg-sky-800 text-white text-xs font-bold rounded-lg shadow-xs transition">
+                        + Add
+                      </button>
+                    `}
+                  </div>
+                `;
+              }).join('') || '<div class="text-center text-xs text-slate-400 py-6">No matching medicines found.</div>'}
+            </div>
+
+            <div class="pt-2 text-right">
+              <button onclick="goBack()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+                Done
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
+      $('app-view').innerHTML = `<div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">${renderPicker()}</div>`;
+      
+      const searchEl = $('picker-search');
+      if (searchEl) {
+        searchEl.oninput = e => {
+          pickerQuery = e.target.value;
+          $('app-view').innerHTML = `<div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">${renderPicker()}</div>`;
+          const inputRe = $('picker-search');
+          if (inputRe) {
+            inputRe.focus();
+            inputRe.setSelectionRange(inputRe.value.length, inputRe.value.length);
+          }
+        };
+      }
+
+      window.linkMedicineToDoc = (dId, mId) => {
+        if (!S.dm.some(x => x.doctorId === dId && x.medId === mId)) {
+          S.dm.push({ id: uid(), doctorId: dId, medId: mId });
+          assignedSet.add(mId);
+          saveState();
+          showToast('Added to doctor formulation');
+          $('app-view').innerHTML = `<div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">${renderPicker()}</div>`;
+        }
+      };
+    }
+
+    function unlinkDoctorMedicine(linkId) {
+      showDialog({
+        title: 'Remove Medicine',
+        message: 'Remove this formulation from doctor profile?',
+        icon: '🗑️',
+        confirmText: 'Remove',
+        cancelText: 'Cancel',
+        onConfirm: () => {
+          S.dm = S.dm.filter(l => l.id !== linkId);
+          saveState();
+          showToast('Removed from doctor list');
+          render();
+        }
+      });
+    }
+
+    function openExpiryForm(expId = null) {
+      const isEdit = !!expId;
+      const x = isEdit ? S.exp.find(e => e.id === expId) : null;
+      let expPhotoData = x ? x.photo || '' : '';
+
+      const content = `
+        <div class="space-y-3 animate-fade-in text-left">
+          <div class="flex items-center justify-between border-b pb-2">
+            <h2 class="text-base font-extrabold text-slate-900">${isEdit ? 'Edit Batch & Expiry Entry' : 'Log Batch / Expiry / Non-Moving'}</h2>
+            <button onclick="goBack()" class="text-slate-400 hover:text-slate-600 font-bold">✕</button>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Pick Medicine from Catalog (Auto-fill)</label>
+            <select id="ef-pick" onchange="autoFillExpiryFromCatalog(this.value)" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+              <option value="">— Select Catalog Medicine —</option>
+              ${S.meds.map(m => `<option value="${m.id}" ${x && x.medId === m.id ? 'selected' : ''}>${esc(brandDisplay(m))} (${esc(m.composition || '')})</option>`).join('')}
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Medicine Name * (Appears in Red)</label>
+            <input id="ef-name" placeholder="Brand or generic name" value="${esc(x ? x.name : '')}" class="w-full p-2.5 rounded-xl border border-rose-300 text-sm font-bold text-rose-700 focus:ring-2 focus:ring-rose-500 focus:outline-none">
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Composition / Salt</label>
+              <input id="ef-comp" placeholder="Content composition" value="${esc(x ? x.composition : '')}" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Manufacturer</label>
+              <input id="ef-company" placeholder="e.g. Curatio, Alkem, Cipla" value="${esc(x ? x.company : '')}" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Dosage Form (e.g. Sunscreen, Tablet)</label>
+              <input id="ef-dosage-custom" list="dosage-datalist" placeholder="Select or type (e.g. Sunscreen)" value="${esc(x ? (x.dosage || '') : '')}" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+              <datalist id="dosage-datalist">
+                ${S.dos.map(d => `<option value="${esc(d.name)}">`).join('')}
+              </datalist>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Therapeutic Classification</label>
+              <input id="ef-cls-custom" list="cls-datalist" placeholder="Select or type category" value="${esc(x ? (x.cls || '') : '')}" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+              <datalist id="cls-datalist">
+                ${S.cls.map(c => `<option value="${esc(c.name)}">`).join('')}
+              </datalist>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Batch Number</label>
+              <input id="ef-batch" placeholder="e.g. B-204" value="${esc(x ? x.batch : '')}" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs font-mono uppercase focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">MRP Amount (₹)</label>
+              <input id="ef-mrp" type="number" step="0.01" placeholder="0.00" value="${esc(x ? x.mrp : '')}" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            </div>
+          </div>
+
+          <div class="bg-amber-50/80 p-3 rounded-xl border border-amber-300">
+            <label class="block text-xs font-black text-amber-950 mb-1">📦 Quantity in Stock (Units / Strips / Bottles) *</label>
+            <input id="ef-qty" type="number" min="0" placeholder="e.g. 10" value="${esc(x ? x.qty : '1')}" class="w-full p-2.5 rounded-xl border border-amber-300 text-sm font-extrabold text-amber-950 focus:ring-2 focus:ring-amber-500 focus:outline-none bg-white">
+          </div>
+
+          <div class="bg-emerald-50/80 p-3 rounded-xl border border-emerald-300">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="ef-sync-store" checked class="w-4 h-4 text-emerald-700 rounded focus:ring-emerald-500">
+              <span class="text-xs font-bold text-emerald-950">Add to MAULI MEDICINE LIST &amp; Master Catalog automatically</span>
+            </label>
+            <p class="text-[11px] text-emerald-800 mt-1 pl-6">New dosage forms (like Sunscreen) will also be registered automatically in the dosage directory.</p>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-xs font-bold text-slate-700">Stock Tracking Category</label>
+            <div class="grid grid-cols-2 gap-2">
+              <label class="flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer ${x && x.nonMoving ? 'border-slate-200 bg-white text-slate-600' : 'border-emerald-600 bg-emerald-50 text-emerald-950 font-bold'}">
+                <input type="radio" name="ef-type" value="moving" ${x && x.nonMoving ? '' : 'checked'} class="text-emerald-700">
+                <span class="text-xs">Active Expiry Track</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer ${x && x.nonMoving ? 'border-purple-600 bg-purple-50 text-purple-950 font-bold' : 'border-slate-200 bg-white text-slate-600'}">
+                <input type="radio" name="ef-type" value="nonmoving" ${x && x.nonMoving ? 'checked' : ''} class="text-purple-700">
+                <span class="text-xs">Non-Moving Stock</span>
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Expiry Date</label>
+            <input id="ef-expiry" type="date" value="${esc(x ? x.expiry : '')}" class="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          </div>
+
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <label class="block text-xs font-bold text-slate-800 mb-1">📸 Medicine Photo (Large Right-Side Display)</label>
+            <input type="file" id="ef-photo-input" accept="image/*" class="text-xs w-full text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-700 file:text-white hover:file:bg-emerald-800">
+            
+            <div id="ef-photo-preview-wrap" class="mt-2.5 ${expPhotoData ? '' : 'hidden'} flex items-center gap-3">
+              <img id="ef-photo-preview-img" src="${expPhotoData}" class="w-20 h-20 rounded-xl object-cover border border-slate-300 shadow-xs">
+              <div>
+                <span class="text-[11px] text-emerald-800 font-bold block">✓ Photo ready</span>
+                <button type="button" onclick="clearExpiryPhoto()" class="text-xs text-rose-600 font-bold hover:underline">Remove photo</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2 flex gap-2">
+            <button onclick="saveExpiryData('${expId || ''}')" class="flex-1 py-2.5 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shadow-xs transition">
+              ${isEdit ? 'Save Changes' : 'Log Batch / Stock'}
+            </button>
+            <button onclick="goBack()" class="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">
+              Cancel
+            </button>
+          </div>
+        </div>
+      `;
+
+      $('app-view').innerHTML = `<div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm">${content}</div>`;
+
+      const photoInp = $('ef-photo-input');
+      if (photoInp) {
+        photoInp.onchange = async e => {
+          const file = e.target.files[0];
+          if (!file) return;
+          try {
+            expPhotoData = await compressImageFile(file);
+            $('ef-photo-preview-img').src = expPhotoData;
+            $('ef-photo-preview-wrap').classList.remove('hidden');
+          } catch (err) {
+            showToast('Image processing error');
+          }
+        };
+      }
+
+      window.clearExpiryPhoto = () => {
+        expPhotoData = '';
+        if (photoInp) photoInp.value = '';
+        $('ef-photo-preview-wrap').classList.add('hidden');
+      };
+
+      window.autoFillExpiryFromCatalog = medId => {
+        const m = S.meds.find(x => x.id === medId);
+        if (m) {
+          $('ef-name').value = brandDisplay(m);
+          $('ef-comp').value = m.composition || '';
+          $('ef-company').value = m.company || '';
+          if ($('ef-dosage-custom')) $('ef-dosage-custom').value = m.dosage || '';
+          if ($('ef-cls-custom')) $('ef-cls-custom').value = m.cls || '';
+          if (m.photo && !expPhotoData) {
+            expPhotoData = m.photo;
+            $('ef-photo-preview-img').src = expPhotoData;
+            $('ef-photo-preview-wrap').classList.remove('hidden');
+          }
+        }
+      };
+
+      window.saveExpiryData = id => {
+        const name = $('ef-name').value.trim();
+        const comp = $('ef-comp').value.trim();
+        const company = $('ef-company').value.trim();
+        const dosageVal = $('ef-dosage-custom') ? $('ef-dosage-custom').value.trim() : '';
+        const clsVal = $('ef-cls-custom') ? $('ef-cls-custom').value.trim() : '';
+        const batch = $('ef-batch').value.trim();
+        const mrp = $('ef-mrp').value.trim();
+        const qty = Number($('ef-qty').value) || 0;
+        const expiry = $('ef-expiry').value;
+        const typeRadios = document.getElementsByName('ef-type');
+        const nonMoving = Array.from(typeRadios).find(r => r.checked)?.value === 'nonmoving';
+        let medId = $('ef-pick').value;
+        const syncStore = $('ef-sync-store') ? $('ef-sync-store').checked : true;
+
+        if (!name) {
+          showToast('Medicine name required');
+          return;
+        }
+
+        if (dosageVal && !S.dos.some(d => d.name.toLowerCase() === dosageVal.toLowerCase())) {
+          S.dos.push({ id: uid(), name: dosageVal });
+        }
+
+        if (clsVal && !S.cls.some(c => c.name.toLowerCase() === clsVal.toLowerCase())) {
+          S.cls.push({ id: uid(), name: clsVal });
+        }
+
+        if (syncStore) {
+          let existingMed = medId ? S.meds.find(m => m.id === medId) : null;
+          if (!existingMed) {
+            existingMed = S.meds.find(m => 
+              (m.brand || m.name || '').toLowerCase() === name.toLowerCase() ||
+              (comp && (m.composition || '').toLowerCase() === comp.toLowerCase())
+            );
+          }
+
+          if (existingMed) {
+            existingMed.inStore = true;
+            if (dosageVal) existingMed.dosage = dosageVal;
+            if (clsVal) existingMed.cls = clsVal;
+            if (company && !existingMed.company) existingMed.company = company;
+            if (comp && !existingMed.composition) existingMed.composition = comp;
+            if (expPhotoData && !existingMed.photo) existingMed.photo = expPhotoData;
+            medId = existingMed.id;
+          } else {
+            const newMedId = uid();
+            S.meds.unshift({
+              id: newMedId,
+              brand: name,
+              name: name,
+              composition: comp || name,
+              company: company,
+              dosage: dosageVal,
+              cls: clsVal,
+              photo: expPhotoData,
+              inStore: true
+            });
+            medId = newMedId;
+          }
+        }
+
+        if (id) {
+          const idx = S.exp.findIndex(x => x.id === id);
+          if (idx !== -1) {
+            S.exp[idx] = {
+              ...S.exp[idx],
+              name,
+              composition: comp,
+              company,
+              dosage: dosageVal,
+              cls: clsVal,
+              batch,
+              mrp,
+              qty,
+              expiry,
+              nonMoving,
+              medId,
+              photo: expPhotoData || S.exp[idx].photo
+            };
+          }
+        } else {
+          S.exp.push({
+            id: uid(),
+            name,
+            composition: comp,
+            company,
+            dosage: dosageVal,
+            cls: clsVal,
+            batch,
+            mrp,
+            qty,
+            expiry,
+            nonMoving,
+            medId,
+            photo: expPhotoData
+          });
+        }
+
+        saveState();
+        showToast(id ? 'Batch entry updated' : 'Added to Expiry & Mauli List');
+        goBack();
+      };
+    }
+
+    function confirmDeleteMedicine(id) {
+      showDialog({
+        title: 'Delete Medicine',
+        message: 'Delete this medicine from catalogue and doctor prescriptions?',
+        icon: '🗑️',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        onConfirm: () => {
+          S.meds = S.meds.filter(m => m.id !== id);
+          S.dm = S.dm.filter(l => l.medId !== id);
+          saveState();
+          showToast('Medicine deleted');
+          render();
+        }
+      });
+    }
+
+    function addToStoreList(id) {
+      const idx = S.meds.findIndex(m => m.id === id);
+      if (idx !== -1) {
+        S.meds[idx].inStore = true;
+        saveState();
+        showToast('Added to Store Medicine List');
+        render();
+      }
+    }
+
+    function confirmDeleteDoctor(id) {
+      showDialog({
+        title: 'Delete Doctor',
+        message: 'Delete doctor and all assigned prescription linkages?',
+        icon: '🗑️',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        onConfirm: () => {
+          S.docs = S.docs.filter(d => d.id !== id);
+          S.dm = S.dm.filter(l => l.doctorId !== id);
+          saveState();
+          showToast('Doctor profile removed');
+          goBack();
+        }
+      });
+    }
+
+    function confirmDeleteExpiry(id) {
+      showDialog({
+        title: 'Delete Batch Record',
+        message: 'Delete this expiry / batch entry?',
+        icon: '🗑️',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        onConfirm: () => {
+          S.exp = S.exp.filter(x => x.id !== id);
+          saveState();
+          showToast('Batch record deleted');
+          render();
+        }
+      });
+    }
+
+    function promptAddCategory(type) {
+      const isCls = type === 'cls';
+      const label = isCls ? 'Therapeutic Class' : 'Dosage Form';
+      
+      const content = `
+        <div class="space-y-3 text-left">
+          <h3 class="text-sm font-bold text-slate-900">Add New ${label}</h3>
+          <input id="cat-input-name" placeholder="e.g. ${isCls ? 'Cardiovascular' : 'Suspension'}" class="w-full p-2.5 rounded-xl border border-slate-300 text-sm font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          <div class="flex gap-2 justify-end pt-1">
+            <button onclick="$('modal-container').classList.add('hidden')" class="px-3 py-1.5 rounded-xl bg-slate-100 text-xs font-semibold text-slate-700">Cancel</button>
+            <button onclick="commitAddCategory('${type}')" class="px-4 py-1.5 rounded-xl bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800">Add</button>
+          </div>
+        </div>
+      `;
+
+      $('modal-icon').textContent = isCls ? '🧬' : '💊';
+      $('modal-title').textContent = `New ${label}`;
+      $('modal-body').innerHTML = content;
+      $('modal-actions').innerHTML = '';
+      $('modal-container').classList.remove('hidden');
+
+      window.commitAddCategory = t => {
+        const val = $('cat-input-name').value.trim();
+        if (!val) return;
+        if (S[t].some(x => x.name.toLowerCase() === val.toLowerCase())) {
+          showToast('Already exists');
+          return;
+        }
+        S[t].push({ id: uid(), name: val });
+        saveState();
+        $('modal-container').classList.add('hidden');
+        showToast(`Added ${val}`);
+        render();
+      };
+    }
+
+    function renameCategory(type, id) {
+      const obj = S[type].find(x => x.id === id);
+      if (!obj) return;
+      const isCls = type === 'cls';
+
+      const content = `
+        <div class="space-y-3 text-left">
+          <h3 class="text-sm font-bold text-slate-900">Rename ${isCls ? 'Class' : 'Dosage Form'}</h3>
+          <input id="cat-rename-input" value="${esc(obj.name)}" class="w-full p-2.5 rounded-xl border border-slate-300 text-sm font-bold focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+          <div class="flex gap-2 justify-end pt-1">
+            <button onclick="$('modal-container').classList.add('hidden')" class="px-3 py-1.5 rounded-xl bg-slate-100 text-xs font-semibold text-slate-700">Cancel</button>
+            <button onclick="commitRenameCategory('${type}', '${id}')" class="px-4 py-1.5 rounded-xl bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800">Update</button>
+          </div>
+        </div>
+      `;
+
+      $('modal-icon').textContent = '✏️';
+      $('modal-title').textContent = 'Rename';
+      $('modal-body').innerHTML = content;
+      $('modal-actions').innerHTML = '';
+      $('modal-container').classList.remove('hidden');
+
+      window.commitRenameCategory = (t, catId) => {
+        const newVal = $('cat-rename-input').value.trim();
+        if (!newVal || newVal === obj.name) {
+          $('modal-container').classList.add('hidden');
+          return;
+        }
+        const oldName = obj.name;
+        obj.name = newVal;
+
+        const field = t === 'cls' ? 'cls' : 'dosage';
+        S.meds.forEach(m => {
+          if (m[field] === oldName) m[field] = newVal;
+        });
+
+        saveState();
+        $('modal-container').classList.add('hidden');
+        showToast('Updated successfully');
+        render();
+      };
+    }
+
+    function confirmDeleteCategory(type, id) {
+      const obj = S[type].find(x => x.id === id);
+      if (!obj) return;
+
+      showDialog({
+        title: 'Delete Category',
+        message: `Delete "${obj.name}"? Medicines will have this field unassigned.`,
+        icon: '🗑️',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        onConfirm: () => {
+          S[type] = S[type].filter(x => x.id !== id);
+          saveState();
+          showToast('Category deleted');
+          goBack();
+        }
+      });
+    }
+
+    function toggleAdminMode() {
+      if (isAdmin) {
+        isAdmin = false;
+        try { sessionStorage.removeItem('mm_isAdmin'); } catch(e) {}
+        showToast('Switched to Doctor / Staff View');
+        render();
+      } else {
+        const correctPin = S.cfg.pin || '1234';
+        const content = `
+          <div class="space-y-3 text-left">
+            <p class="text-xs text-slate-500">Please enter the 4-digit Administrator security PIN (Default: <b>1234</b>)</p>
+            <input id="admin-pin-input" type="password" maxlength="8" placeholder="••••" class="w-full text-center tracking-widest text-lg font-mono p-2 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+            <div class="flex gap-2 justify-end pt-1">
+              <button onclick="$('modal-container').classList.add('hidden')" class="px-3 py-1.5 rounded-xl bg-slate-100 text-xs font-semibold text-slate-700">Cancel</button>
+              <button onclick="commitUnlockAdmin('${correctPin}')" class="px-4 py-1.5 rounded-xl bg-emerald-700 text-white text-xs font-bold hover:bg-emerald-800">Unlock</button>
+            </div>
+          </div>
+        `;
+
+        $('modal-icon').textContent = '🔐';
+        $('modal-title').textContent = 'Admin PIN Required';
+        $('modal-body').innerHTML = content;
+        $('modal-actions').innerHTML = '';
+        $('modal-container').classList.remove('hidden');
+
+        setTimeout(() => {
+          const inp = $('admin-pin-input');
+          if (inp) inp.focus();
+        }, 80);
+
+        window.commitUnlockAdmin = expected => {
+          const typed = $('admin-pin-input').value.trim();
+          if (typed === expected) {
+            isAdmin = true;
+            try { sessionStorage.setItem('mm_isAdmin', 'true'); } catch(e) {}
+            $('modal-container').classList.add('hidden');
+            showToast('Admin Mode Unlocked');
+            render();
+          } else {
+            showToast('Incorrect PIN');
+          }
+        };
+      }
+    }
+
+    function updateAdminPin() {
+      const np = $('cfg-new-pin').value.trim();
+      if (np.length < 4) {
+        showToast('PIN must be at least 4 characters');
+        return;
+      }
+      S.cfg.pin = np;
+      saveState();
+      showToast('Admin PIN updated');
+      render();
+    }
+
+    function savePharmacyDetails() {
+      S.cfg = {
+        ...S.cfg,
+        name: $('cfg-name').value.trim(),
+        type: $('cfg-type').value.trim(),
+        prop: $('cfg-prop').value.trim(),
+        pharm: $('cfg-pharm').value.trim(),
+        dl: $('cfg-dl').value.trim(),
+        phone: $('cfg-phone').value.trim(),
+        wa: $('cfg-wa').value.trim(),
+        email: $('cfg-email').value.trim(),
+        address: $('cfg-address').value.trim()
+      };
+      saveState();
+      showToast('Pharmacy profile saved');
+      render();
+    }
+
+    function downloadJsonBackup() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(S, null, 2));
+      const a = document.createElement('a');
+      a.setAttribute("href", dataStr);
+      a.setAttribute("download", `mauli_medicos_backup_${new Date().toISOString().slice(0, 10)}.json`);
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast('Backup downloaded');
+    }
+
+    function exportMedicinesCsv() {
+      const header = ["Brand", "Composition", "Company", "Dosage", "Category", "InStore"];
+      const rows = S.meds.map(m => [
+        brandDisplay(m),
+        m.composition || '',
+        m.company || '',
+        m.dosage || '',
+        m.cls || '',
+        m.inStore !== false ? 'Yes' : 'No'
+      ]);
+
+      const csvContent = "data:text/csv;charset=utf-8," + [header, ...rows]
+        .map(e => e.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+        .join("\n");
+
+      const a = document.createElement('a');
+      a.setAttribute("href", encodeURI(csvContent));
+      a.setAttribute("download", `mauli_medicines_${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast('CSV exported');
+    }
+
+    function handleRestoreFile(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = ev => {
+        try {
+          const text = ev.target.result;
+          if (file.name.endsWith('.json')) {
+            const parsed = JSON.parse(text);
+            if (parsed.meds && Array.isArray(parsed.meds)) {
+              let added = 0;
+              const curIds = new Set(S.meds.map(x => x.id));
+              parsed.meds.forEach(m => {
+                if (!curIds.has(m.id)) {
+                  S.meds.push(m);
+                  added++;
+                }
+              });
+              if (parsed.docs) {
+                const curDocIds = new Set(S.docs.map(x => x.id));
+                parsed.docs.forEach(d => { if (!curDocIds.has(d.id)) S.docs.push(d); });
+              }
+              if (parsed.exp) {
+                const curExpIds = new Set(S.exp.map(x => x.id));
+                parsed.exp.forEach(e => { if (!curExpIds.has(e.id)) S.exp.push(e); });
+              }
+              saveState();
+              showToast(`Restore complete: +${added} items merged`);
+              render();
+            } else {
+              showToast('Invalid JSON structure');
+            }
+          } else {
+            const lines = text.split(/\r?\n/).filter(x => x.trim());
+            let count = 0;
+            for (let i = 1; i < lines.length; i++) {
+              const cols = lines[i].split(',').map(s => s.trim().replace(/^"|"$/g, ''));
+              if (cols[0] || cols[1]) {
+                S.meds.push({
+                  id: uid(),
+                  brand: cols[0] || cols[1],
+                  name: cols[1] || cols[0],
+                  composition: cols[1] || cols[0],
+                  company: cols[2] || '',
+                  dosage: cols[3] || '',
+                  cls: cols[4] || '',
+                  inStore: true
+                });
+                count++;
+              }
+            }
+            saveState();
+            showToast(`Imported ${count} medicines from CSV`);
+            render();
+          }
+        } catch (e) {
+          showToast('Failed to parse file: ' + e.message);
+        }
+      };
+      reader.readAsText(file);
+      input.value = '';
+    }
+
+    function confirmResetDefaults() {
+      showDialog({
+        title: 'Factory Demo Reset',
+        message: 'Restore medicines back to initial factory preset with Sunshade Sunscreen?',
+        icon: '⚠️',
+        confirmText: 'Reset',
+        cancelText: 'Cancel',
+        onConfirm: () => {
+          localStorage.removeItem('mauli_medicos_state_v5');
+          loadState();
+          showToast('Reset to Sunshade Sunscreen');
+          navigate('home');
+        }
+      });
+    }
+
+    function handleSearch(val) {
+      searchQuery = val;
+      render();
+      const el = $('search-input');
+      if (el) {
+        el.focus();
+        el.setSelectionRange(el.value.length, el.value.length);
+      }
+    }
+
+    function clearSearch() {
+      searchQuery = '';
+      render();
+    }
+
+    function render() {
+      try {
+        const headerEl = $('app-header');
+        const navEl = $('app-nav');
+        const viewEl = $('app-view');
+
+        if (headerEl) headerEl.innerHTML = renderHeader();
+        if (navEl) navEl.innerHTML = renderNav();
+
+        if (!viewEl) return;
+        const root = route[0];
+
+        if (root === 'home') {
+          viewEl.innerHTML = renderHome();
+        } else if (root === 'meds') {
+          viewEl.innerHTML = renderMedicines();
+        } else if (root === 'cls') {
+          viewEl.innerHTML = renderClassifications(route);
+        } else if (root === 'dos') {
+          viewEl.innerHTML = renderDosages(route);
+        } else if (root === 'docs') {
+          viewEl.innerHTML = renderDoctors(route);
+        } else if (root === 'exp') {
+          viewEl.innerHTML = renderExpiry();
+        } else if (root === 'settings') {
+          viewEl.innerHTML = renderSettings();
+        } else {
+          viewEl.innerHTML = renderHome();
+        }
+      } catch (err) {
+        console.error('Render error:', err);
+      }
+    }
+
+    function bootstrap() {
+      loadState();
+      render();
+    }
+
+    if (document.readyState === 'loading') {
+      window.addEventListener('DOMContentLoaded', bootstrap);
+    } else {
+      bootstrap();
+    }
+  </script>
+</body>
+</html>
